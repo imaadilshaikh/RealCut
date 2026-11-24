@@ -56,9 +56,8 @@ def live_target(creator):
             return None
         return ('twitch', creator['ref'], creator['url']) if streams else None
     try:
-        import yt_dlp
-        with yt_dlp.YoutubeDL({'quiet': True, 'no_warnings': True, 'skip_download': True, 'noplaylist': True,
-                               'socket_timeout': 20}) as y:
+        from ytdl_helper import create_ytdl
+        with create_ytdl({'skip_download': True, 'socket_timeout': 20}) as y:
             info = y.extract_info(creator['url'] + '/live', download=False)
     except Exception:
         return None

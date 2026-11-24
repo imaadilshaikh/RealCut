@@ -89,7 +89,8 @@ def attach(app,data,state,probe,transcribe):
                         url=json.loads(request.read_text(encoding='utf-8')).get('url','')
                         if allowed(url) and ('youtu.be' in url or 'youtube.com' in url):
                             state[job].update(message='Reading the source YouTube captions before trying local recognition…')
-                            with yt_dlp.YoutubeDL({'quiet':True,'no_warnings':True,'skip_download':True,'noplaylist':True,'socket_timeout':15,'retries':1}) as downloader:info=downloader.extract_info(url,download=False)
+                            from ytdl_helper import create_ytdl
+                            with create_ytdl({'skip_download':True,'socket_timeout':15,'retries':1}) as downloader:info=downloader.extract_info(url,download=False)
                             words=from_info(info)
                             if words and language=='hinglish':
                                 from captions import ascii_fold

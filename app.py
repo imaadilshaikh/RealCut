@@ -51,7 +51,7 @@ def media(id:str):
  return FileResponse(p,media_type='video/mp4')
 @app.get('/assets/{name}')
 def assets(name:str):
- if name not in ('app.js','style.css','extras.js','transcripts.js','vision.js'):raise HTTPException(404)
+ if name not in ('app.js','style.css','extras.js','transcripts.js','vision.js','social.js'):raise HTTPException(404)
  return FileResponse(ROOT/name)
 @app.get('/text/{id}/{kind}')
 def text_file(id:str,kind:str):
@@ -71,6 +71,21 @@ def library():
     records.append({'id':f.stem,'title':j.get('settings',{}).get('title') or 'NeonClipping clip','created':f.stat().st_mtime,'meta':result.get('meta',{}),'settings':j.get('settings',{}),'srt':bool(result.get('srt')) and (DATA/(f.stem+'.srt')).exists(),**app.reedit_metadata(f.stem,j,groups)})
   except (ValueError,OSError):pass
  return sorted(records,key=lambda j:j['created'],reverse=True)
+
+@app.delete('/clips/{id}')
+@app.post('/clips/{id}/delete')
+def delete_clip(id:str):
+ if not id.isalnum():raise HTTPException(400,'Invalid clip ID.')
+ deleted_any=False
+ for ext in ('.mp4','.json','.srt','.ass','.vtt','.state.json','.words.json'):
+  target=DATA/(id+ext)
+  if target.exists():
+   try:
+    target.unlink(missing_ok=True);deleted_any=True
+   except OSError as e:raise HTTPException(500,f"Could not delete {target.name}: {str(e)}")
+ state.pop(id,None)
+ if not deleted_any:raise HTTPException(404,'Clip not found.')
+ return {'status':'deleted','id':id}
 
 def source_range(b):
  id=str(b.get('id',''))
@@ -161,8 +176,9 @@ def export(b:dict):
  threading.Thread(target=work,daemon=True).start();return {'job':job}
 PAD=4.0         # seconds fetched before a section: yt-dlp cuts on a keyframe, export trims exactly
 FAST_OVER=600   # seconds: longer videos go audio-first, short ones are downloaded whole
+from ytdl_helper import get_ytdl_opts
 def _yt(opts):
- return yt_dlp.YoutubeDL({'noplaylist':True,'quiet':True,'no_warnings':True,'socket_timeout':20,'retries':3,'fragment_retries':3,'concurrent_fragment_downloads':6,**opts})
+ return yt_dlp.YoutubeDL(get_ytdl_opts({'concurrent_fragment_downloads':6,**opts}))
 def _dur(p):
  r=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0',str(p)],capture_output=True,text=True,check=True);return float(r.stdout.strip())
 
@@ -487,7 +503,7 @@ def live_stop(lid:str):
 
 @app.get('/donate')
 def donate():
- """Optional donate links (donate.json or NEONCLIPPING_DONATE_RAZORPAY / NEONCLIPPING_DONATE_PAYPAL). Only https links are served; nothing is unlocked by donating."""
+ """Optional donate links / UPI info from donate.json or environment."""
  cfg={}
  try:cfg=json.loads((ROOT/'donate.json').read_text(encoding='utf-8'))
  except (OSError,ValueError):pass
@@ -495,6 +511,10 @@ def donate():
  for k in ('razorpay','paypal'):
   v=str(os.environ.get('NEONCLIPPING_DONATE_'+k.upper()) or cfg.get(k) or '').strip()
   if v.startswith('https://') and len(v)<300 and ' ' not in v:out[k]=v
+ upi=str(os.environ.get('NEONCLIPPING_DONATE_UPI') or cfg.get('upi_id') or '').strip()
+ if upi and '@' in upi:
+  out['upi_id']=upi
+  out['upi_name']=str(cfg.get('upi_name') or 'Aadil Shaikh').strip()
  return out
 
 @app.post('/feedback')
@@ -550,6 +570,9 @@ vision.attach(app,DATA,state,probe)
 
 import creators
 creators.attach(app,DATA,LIVE,lambda target,opts,cid:start_live(target,opts,cid))
+
+import social_upload
+social_upload.attach(app,DATA)
 
 if __name__=='__main__':
  lan=os.environ.get('NEONCLIPPING_LAN')=='1'      # phone remote: listen on the home network (PIN required, see phone.py); default is this PC only

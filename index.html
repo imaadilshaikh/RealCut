@@ -1,58 +1,546 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="color-scheme" content="dark"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NeonClipping</title><link rel="stylesheet" href="/assets/style.css?v=20261120-vision1"></head><body>
-<aside class="sidebar"><a class="brand" href="/">N↗ <div>NEONCLIPPING<small>OPEN-SOURCE CLIP ENGINE</small></div></a><div class="nav-label">WORKSPACE</div><button class="nav active" data-view="editor">◫ &nbsp; Create clips</button><button class="nav" data-view="library">▦ &nbsp; My clips <span id="library-count">0</span></button><div class="side-note">● Your machine. Your clips.<p>Independent local processing.<br>No clipping subscription.</p></div><div class="signature">BUILT FOR THE NEXT HIGHLIGHT.<small>by <a href="https://www.instagram.com/iamajmeena/" target="_blank" rel="noopener" style="color:inherit">Ajay K Meena</a> · <a href="https://github.com/iamajmeena/neonclipping" target="_blank" rel="noopener" style="color:inherit">open-source</a></small></div></aside>
-<main><header><div class="eyebrow">THE CLIP STARTS HERE</div><div class="top"><h1>Long video. <em>Big moments.</em></h1><span class="social"><a class="gh" href="https://github.com/iamajmeena/neonclipping" target="_blank" rel="noopener">★ Star on GitHub</a><a class="ig" href="https://www.instagram.com/iamajmeena/" target="_blank" rel="noopener">Follow @iamajmeena</a><button class="don" id="donate" hidden>♥ Donate</button></span><dialog id="donate-dialog"><b>Support NeonClipping ♥</b><p>It is free and open-source. If it saves you time, a small donation helps me keep improving it. Totally optional: nothing is locked, ever.</p><div class="don-links"><a id="don-rzp" target="_blank" rel="noopener" hidden>Razorpay (UPI, cards)</a><a id="don-pp" target="_blank" rel="noopener" hidden>PayPal</a></div><button id="don-close">Close</button></dialog></div><p>Paste a link. Get captioned 9:16 clips in about two minutes. Free, local, open-source.</p></header><section id="editor-view">
-<section class="panel import-panel"><div class="section-head"><h2><span class="step">01</span> Bring your video</h2><label class="upload">↑ Upload video<input id="file" type="file" accept="video/*" hidden></label></div><div class="url-row"><input id="url" type="url" placeholder="Paste a YouTube, Twitch or Kick replay link"><button class="primary" id="link">Get preview ↗</button><button class="primary make" id="make">⚡ Make clips</button></div><div class="make-row"><span class="muted">Make clips = one click: download → AI picks best moments → captioned 9:16 clips. Uses the Clips / length / layout / caption style below.</span></div><div id="make-results" hidden><div class="progress-track"><div id="make-progress"></div></div><b id="make-status"></b><div id="make-grid" class="make-grid"></div></div><div class="import-note" id="link-status" role="status">Frames arrive first. Select your areas while the full source downloads.</div><div class="progress-track" hidden id="progress-wrap"><div id="progress"></div></div><div id="frames" class="frames"></div><label class="toggle" style="margin-top:12px"><input id="auto-analyze" type="checkbox" checked> Find highlights automatically when the source is ready</label></section><details class="panel" id="queue-panel"><summary><b>Processing queue</b> · save batches for later</summary><p class="muted">Queue video links, pause waiting work, or retry an interrupted job. Running work is kept safe.</p><label>Video links, one per line<textarea id="queue-urls" rows="3" placeholder="https://www.youtube.com/watch?v=..."></textarea></label><div class="controls"><label>Start after (optional)<input id="queue-time" type="datetime-local"></label><button class="secondary" id="queue-add">Add videos to queue</button><button id="queue-pause">Pause queue</button><button id="queue-refresh">Refresh queue</button></div><div id="queue-list"></div></details>
-<details class="panel" id="ai-panel"><summary><b>🤖 Long stream? Let a free chatbot pick the moments</b> <span class="pill">NEW</span></summary>
-<p class="muted">A chatbot given a 9-hour transcript only really reads the start. So: split the transcript into small parts, paste each part into any free chatbot (Gemini, ChatGPT, Claude…), paste its answers back here, and NeonClipping downloads only those sections and makes the clips. Needs a YouTube video with captions. Nothing is sent anywhere by NeonClipping.</p>
-<div class="url-row"><input id="ai-url" type="text" placeholder="YouTube video link (a finished stream or video)"><button class="primary" id="ai-split">1 · Split into parts</button></div>
-<div class="controls"><label>Parts (blank = automatic)<input id="ai-parts" type="number" min="1" max="40" placeholder="auto"></label><label>Moments per part<input id="ai-per" type="number" min="1" max="10" value="3"></label></div>
-<div class="muted" id="ai-status"></div>
-<div id="ai-list"></div>
-<h3 style="margin-top:16px">2 · Paste the chatbot answers (all parts together is fine)</h3>
-<textarea id="ai-answers" rows="6" placeholder='[{"start":"00:12:30","end":"00:13:10","title":"Plane crash","hook":"bhai plane gir gaya"}] … or lines like 12:30-13:10 Plane crash'></textarea>
-<div class="controls"><button class="secondary" id="ai-read">Read the answers</button><button class="primary" id="ai-make" disabled>3 · Make clips from these moments</button></div>
-<div id="ai-moments"></div></details>
-<section class="panel creators-panel"><div class="section-head"><h2>👥 Creators <span class="pill">NEW</span></h2><span class="muted">add a streamer once, clips start by themselves when they go live</span></div><div class="url-row"><input id="creator-url" type="text" placeholder="Twitch name (kaicenat) or Twitch / YouTube channel link (youtube.com/@name)"><button class="primary" id="creator-add">+ Add creator</button></div><div class="import-note">NeonClipping checks every minute. When a creator on your list goes live, it records the stream and clips the chat spikes with the layout, facecam boxes and caption style you had selected when you added them (press “Use my current layout” to change it later). One stream at a time. Keep NeonClipping open; unattended recordings stop after 3 hours (a new one starts if they are still live), and the big recording file is deleted after the clips are cut.</div><div id="creator-note" class="muted"></div><div id="creator-list"></div></section>
-<section class="panel live-panel"><div class="section-head"><h2>⚡ Live clipping <span class="pill">NEW</span></h2><span class="muted">clips while the stream is on</span></div><div class="url-row"><input id="live-url" type="text" placeholder="Twitch channel link or YouTube Live link"><button class="primary" id="live-start">● Start live clipping</button></div><div class="import-note">Records the stream, watches chat speed and cuts a clip around every chat spike (starting ~24 s before it). Uses your layout, facecam boxes, caption style and language from the steps below. Works only while the stream is live.</div><div id="live-box" hidden><div class="live-stats" id="live-stats"></div><div class="live-actions"><button class="secondary" id="live-now">✂ Clip the last 30 s now</button><button class="secondary" id="live-stop">■ Stop</button></div><div id="live-grid" class="make-grid"></div></div></section>
-<section class="panel"><div class="section-head"><h2><span class="step">02</span> Make it your format</h2><span class="muted">9:16 · 1080 × 1920</span></div><div class="controls"><label>Caption accuracy<select id="accurate"><option value="fast" selected>YouTube captions (default)</option><option value="best">Best Hindi: large-v3 (slow)</option></select></label><label>Mode<select id="mode"><option value="fast">⚡ Fast (~2-3 min)</option><option value="deep">🔬 Deep (slower, smarter)</option></select></label><label>Clips<input id="count" type="number" min="1" max="12" value="4"></label><label>Min length (s)<input id="minlen" type="number" min="5" max="120" value="30"></label><label>Max length (s)<input id="length" type="number" min="10" max="180" value="60"></label><button class="secondary" id="analyze">✦ Find highlights</button><span class="muted">Movement + audio activity.<br>Review each candidate.</span></div><div class="controls output-controls"><label>Output format<select id="aspect"><option value="vertical">9:16 · Shorts / Reels</option><option value="square">1:1 · Square</option><option value="portrait">4:5 · Feed</option><option value="threefour">3:4 · Portrait</option><option value="landscape">16:9 · YouTube</option></select></label><label>Resolution<select id="resolution"><option value="720">720</option><option value="1080" selected>1080</option><option value="2160">2160 · 4K</option></select></label><label>Frame rate<select id="fps"><option value="0">Keep original</option><option value="24">24 fps</option><option value="30">30 fps</option><option value="60">60 fps</option></select></label></div><div class="layout-grid" id="layouts"><button class="choice active" data-layout="stack"><span class="mini stack-mini"><i></i><i></i></span><b>Face + gameplay</b><small>Choose both areas</small></button><button class="choice" data-layout="blur"><span class="mini blur-mini"><i></i></span><b>Blurred fill</b><small>Keep the wider frame</small></button><button class="choice" data-layout="fill"><span class="mini fill-mini"><i></i></span><b>Fill screen</b><small>Bold centre crop</small></button><button class="choice" data-layout="game"><span class="mini game-mini"><i></i></span><b>Gameplay only</b><small>Use your selected area</small></button></div><div class="preset-row"><b>Facecam position</b><button class="chip" data-preset="tl">↖ Top-left</button><button class="chip" data-preset="tr">↗ Top-right</button><button class="chip" data-preset="bl">↙ Bottom-left</button><button class="chip" data-preset="br">↘ Bottom-right</button><button class="chip" data-preset="bc">⬇ Bottom-centre</button><button class="chip" data-preset="none">No facecam</button><span class="muted" id="preset-note">Pick one, or draw the boxes yourself in step 03.</span></div></section>
-<section class="panel"><div class="section-head"><h2><span class="step">03</span> Frame your moment</h2><span class="pill" id="source-mode">NO SOURCE YET</span></div><div class="candidate-row"><select id="recent"><option>No highlights yet</option></select><button id="import">Open highlight</button></div><div class="workspace"><div class="source-side"><div class="toolbar"><button id="cam" class="active">▣ Facecam area</button><button id="game">▣ Gameplay area</button><button id="save">Save layout</button><button id="load">Load layout</button></div><div class="canvas-wrap"><canvas id="source" width="960" height="540"></canvas><div id="empty-source">Your preview frames appear here.<small>Draw the facecam and gameplay boxes directly on a frame.</small></div></div><video id="video" controls preload="metadata"></video><div class="range-row"><label>Start / sec<input id="start" type="number" value="0" min="0" step=".1"></label><label>End / sec<input id="end" type="number" value="30" min="0" step=".1"></label><label id="height-control">Face size <span id="height-value">32%</span><input id="top" type="range" min="20" max="50" value="32"></label></div></div><aside class="preview-side"><div class="eyebrow">YOUR VERTICAL CUT</div><canvas id="preview" width="540" height="960"></canvas><small>Layout + caption style preview</small><label class="toggle"><input id="safe-zones" type="checkbox"> Show platform safe zones</label></aside></div></section>
-<section class="panel"><div class="section-head"><h2><span class="step">04</span> Give it a voice</h2><label class="toggle"><input id="captions" type="checkbox" checked> Burn in subtitles</label></div><div class="caption-styles"><button class="caption-choice active gta" data-style="gta"><span>THIS IS <strong>WILD</strong></span><b>GTA Neon</b><small>Pink / cyan / electric lime</small></button><button class="caption-choice bold" data-style="bold"><span>THIS IS <strong>WILD</strong></span><b>Impact</b><small>Bold active-word highlight</small></button><button class="caption-choice hormozi" data-style="hormozi"><span>THIS IS <strong style="color:#00ffff">WILD</strong></span><b>Hormozi</b><small>White + cyan pop, thick outline</small></button><button class="caption-choice mrbeast" data-style="mrbeast"><span style="color:#ffff00">THIS IS <strong style="color:#ff6600">WILD</strong></span><b>MrBeast</b><small>Yellow + orange, huge outline</small></button><button class="caption-choice clean" data-style="clean"><span>This is wild.</span><b>Clean</b><small>Quiet, readable subtitles</small></button></div><div class="controls"><label>Spoken language<select id="language"><option value="">Auto (Hindi → Hinglish)</option><option value="hinglish">Hinglish (Hindi in English letters)</option><option value="hi">हिंदी (Devanagari)</option><option value="en">English</option></select></label><label>Caption height<input id="caption-y" type="range" min="500" max="1750" value="1450"></label><button id="transcribe" class="secondary">Generate subtitles</button></div><p class="muted">Transcribes your selected time range locally. First use downloads a speech model. Check names and Hindi / English words before posting.</p><label class="toggle"><input id="timing-editor" type="checkbox"> Edit word timings</label><div class="controls"><label>Shift captions (seconds)<input id="caption-shift" type="number" step="0.1" value="0.5"></label><button id="shift-captions">Shift all words</button></div><div id="words" class="word-editor"></div><div class="copy-grid"><label>Opening hook / optional<input id="hook" placeholder="Add your own opening line" maxlength="65"></label><label>Clip title<input id="clip-title" placeholder="Give this clip a name"></label></div><label>Post caption<textarea id="post-caption" rows="2" placeholder="Generate subtitles to draft a caption, then edit it in your voice."></textarea></label></section>
-<section class="panel" id="style-panel"><div class="section-head"><h2><span class="step">05</span> Style &amp; extras</h2><span class="pill">NEW</span></div>
-<p class="muted">Optional. Wrap the clip in a post card, add a padded card on a background, a logo, a credit line, an outro ribbon and a music bed. These apply to Make clips, single exports and “Edit saved clips”.</p>
-<div class="controls">
-<label>Template<select id="st-template"><option value="none">None (use the layout above)</option><option value="x_light">X post · light</option><option value="x_dark">X post · dark</option><option value="tiktok_hook">TikTok hook</option><option value="breaking_news">Breaking news</option></select></label>
-<label>Name on the card<input id="st-tpl-name" type="text" maxlength="28" placeholder="Your Name"></label>
-<label>@handle<input id="st-tpl-handle" type="text" maxlength="28" placeholder="yourhandle"></label>
-</div>
-<div class="controls">
-<label>Background<select id="st-bg-mode"><option value="none">None</option><option value="blur">Blurred copy</option><option value="color">Colour</option><option value="gradient">Gradient</option><option value="image">My image</option></select></label>
-<label>Colour<input id="st-bg-color" type="color" value="#0b0912"></label>
-<label>Colour 2<input id="st-bg-color2" type="color" value="#ff4ba5"></label>
-<label><span>Padding <output id="st-padding-o">0</output>%</span><input id="st-padding" type="range" min="0" max="25" value="0"></label>
-<label><span>Rounded corners <output id="st-radius-o">0</output></span><input id="st-radius" type="range" min="0" max="80" value="0"></label>
-<label><span>Dim image <output id="st-dim-o">25</output>%</span><input id="st-bg-dim" type="range" min="0" max="90" value="25"></label>
-<label class="upload">↑ Background image<input id="st-bg-file" type="file" accept="image/*" hidden></label><span class="muted" id="st-bg-name"></span>
-</div>
-<div class="controls">
-<label class="upload">↑ Logo / watermark<input id="st-wm-file" type="file" accept="image/*" hidden></label><span class="muted" id="st-wm-name">no logo</span>
-<label>Position<select id="st-wm-pos"><option value="tr">Top-right</option><option value="tl">Top-left</option><option value="br">Bottom-right</option><option value="bl">Bottom-left</option></select></label>
-<label><span>Size <output id="st-wm-size-o">16</output>%</span><input id="st-wm-size" type="range" min="5" max="40" value="16"></label>
-<label><span>Opacity <output id="st-wm-op-o">85</output>%</span><input id="st-wm-opacity" type="range" min="10" max="100" value="85"></label>
-</div>
-<div class="controls">
-<label>Credit line<input id="st-credit" type="text" maxlength="60" placeholder="Clip: Channel name"></label>
-<label class="check"><input id="st-credit-auto" type="checkbox"> Use the video’s channel name</label>
-<label>Outro ribbon<input id="st-outro" type="text" maxlength="40" placeholder="FOLLOW @yourhandle"></label>
-<label>Outro seconds<input id="st-outro-sec" type="number" min="1.5" max="8" step=".5" value="3"></label>
-</div>
-<div class="controls">
-<label class="upload">↑ Music track<input id="st-music-file" type="file" accept="audio/*" hidden></label><span class="muted" id="st-music-name">no music</span>
-<label><span>Volume <output id="st-mv-o">15</output>%</span><input id="st-music-vol" type="range" min="0" max="100" value="15"></label>
-<label><span>Peak volume <output id="st-mp-o">85</output>%</span><input id="st-music-peak" type="range" min="0" max="100" value="85"></label>
-<label>Riser seconds<input id="st-music-riser" type="number" min="1" max="15" step="1" value="4"></label>
-</div>
-<div class="import-note">The music sits low under the voice, then rises to its peak volume in the last seconds. Your logo, music and image stay on this computer.</div>
-<div class="controls"><button class="secondary" id="st-reset">Reset all style options</button></div></section>
-<section class="panel" id="saved-edit" hidden><h2>Edit saved clips</h2><h3 style="margin-top:18px">Speaker position &amp; shape · 11 layouts</h3><div id="edit-layouts" class="layout-grid"></div><label>Speaker size<input id="edit-top" type="range" min="20" max="50" value="32"></label><p class="muted">Reuse the saved video, selected moments and subtitle timings. Only the final MP4 is exported again. Each clip keeps its own transcript.</p><div class="controls" style="margin-top:14px"><button class="primary" id="apply-video">Apply to all clips of this video</button><button class="secondary" id="apply-one">Only this clip</button><button id="download-bundle">Download video’s clips ZIP</button><a id="bundle-link" hidden download>Download ZIP</a></div></section><section class="export-bar"><div><b id="status" role="status">Add a video to begin.</b><p id="detail">Your exports stay on this computer and appear in My clips.</p></div><button id="batch">Export video highlights</button><button class="primary" id="export">Export clip ↗</button><a id="download" class="download" hidden download="neoncut-clip.mp4">↓ Download MP4</a><a id="srt" hidden>↓ Subtitles SRT</a><a id="vtt" hidden>↓ WebVTT</a></section></section>
-<section id="library-view" hidden><section class="library-heading"><h2>Your clips, <em>ready to go.</em></h2><button id="refresh-library">Refresh library</button></section><p class="muted">Finished exports stay in the studio's data folder. Download an MP4 to keep or share it.</p><div id="library" class="library-grid"></div></section><footer>NEONCLIPPING STUDIO <span>Review your moment. Keep the creator's campaign brief in view.</span></footer></main><script src="/assets/app.js?v=20261120-vision1"></script>
-<script src="/assets/extras.js?v=20261120-vision1"></script><script src="/assets/transcripts.js?v=20261120-vision1"></script><script src="/assets/vision.js?v=20261120-vision1"></script></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="dark">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>NeonClipping</title>
+    <link rel="stylesheet" href="/assets/style.css?v=20261124-editbtn">
+</head>
+
+<body>
+    <aside class="sidebar"><a class="brand" href="/">N↗ <div>NEONCLIPPING<small>OPEN-SOURCE CLIP ENGINE</small></div>
+        </a>
+        <div class="nav-label">WORKSPACE</div><button class="nav active" data-view="editor">◫ &nbsp; Create
+            clips</button><button class="nav" data-view="library">▦ &nbsp; My clips <span
+                id="library-count">0</span></button><button class="nav" data-view="social">🚀 &nbsp; YouTube &amp; Insta</button>
+        <div class="side-note">● Your machine. Your clips.<p>Independent local processing.<br>No clipping subscription.
+            </p>
+        </div>
+        <div class="signature">BUILT FOR THE NEXT HIGHLIGHT.<small>by <a
+                    href="https://www.instagram.com/imaadilshaikh_/" target="_blank" rel="noopener"
+                    style="color:inherit">Aadil Shaikh</a> · <a href="https://github.com/imaadilshaikh" target="_blank"
+                    rel="noopener" style="color:inherit">open-source</a></small></div>
+    </aside>
+    <main>
+        <header>
+            <div class="eyebrow">THE CLIP STARTS HERE</div>
+            <div class="top">
+                <h1>Long video. <em>Big moments.</em></h1><span class="social"><a class="gh"
+                        href="https://github.com/imaadilshaikh" target="_blank" rel="noopener">★ Star on
+                        GitHub</a><a class="ig" href="https://www.instagram.com/imaadilshaikh_/" target="_blank"
+                        rel="noopener">Follow @imaadilshaikh_</a><button class="don" id="donate" hidden>♥
+                        Donate</button></span>
+                <dialog id="donate-dialog">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                        <b style="font-size:16px; color:#fbf6ff">Support NeonClipping ♥</b>
+                        <button id="don-close" type="button" style="background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; padding:2px 6px; line-height:1">✕</button>
+                    </div>
+                    <p style="font-size:12px; margin:0 0 12px; color:var(--muted); line-height:1.4">
+                        Free and open-source tool built by <b>Aadil Shaikh</b>. A direct donation helps maintain and improve it!
+                    </p>
+
+                    <!-- Direct UPI Donation Section -->
+                    <div id="don-upi-box" style="background:#130f1c; border:1px solid #2d243a; border-radius:12px; padding:14px; text-align:center; margin-bottom:12px" hidden>
+                        <div style="font-size:11px; font-weight:700; color:#58e8f7; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px">
+                            Scan &amp; Pay via Any UPI App (GPay / PhonePe / Paytm)
+                        </div>
+                        <div style="background:#fff; border-radius:10px; padding:8px; display:inline-block; margin-bottom:10px; box-shadow:0 4px 15px rgba(0,0,0,0.4)">
+                            <img id="don-upi-qr" src="" alt="UPI QR Code" style="width:160px; height:160px; display:block">
+                        </div>
+                        <div style="background:#0b0812; border:1px solid #30263f; border-radius:8px; padding:8px 10px; display:flex; align-items:center; gap:8px; margin-bottom:10px">
+                            <code id="don-upi-id" style="font-size:12px; color:#d4fb58; flex:1; word-break:break-all; text-align:left">9205177294@fam</code>
+                            <button type="button" id="don-copy-upi" class="secondary" style="font-size:11px; padding:5px 10px; white-space:nowrap">📋 Copy</button>
+                        </div>
+                        <a id="don-upi-app" href="#" class="primary" style="display:block; text-decoration:none; text-align:center; padding:10px; border-radius:8px; font-size:12px; font-weight:bold; background:linear-gradient(90deg,#7c3aed,#ec4899); color:#fff">
+                            📲 Open UPI App on Mobile
+                        </a>
+                    </div>
+
+                    <!-- Other Payment Gateways (Optional) -->
+                    <div class="don-links" style="margin-top:0">
+                        <a id="don-rzp" target="_blank" rel="noopener" hidden>Razorpay (Cards / Netbanking)</a>
+                        <a id="don-pp" target="_blank" rel="noopener" hidden>PayPal</a>
+                    </div>
+                </dialog>
+            </div>
+            <p>Paste a link. Get captioned 9:16 clips in about two minutes. Free, local, open-source.</p>
+        </header>
+        <section id="editor-view">
+            <section class="panel import-panel">
+                <div class="section-head">
+                    <h2><span class="step">01</span> Bring your video</h2><label class="upload">↑ Upload video<input
+                            id="file" type="file" accept="video/*" hidden></label>
+                </div>
+                <div class="url-row"><input id="url" type="url"
+                        placeholder="Paste a YouTube, Twitch or Kick replay link"><button class="primary" id="link">Get
+                        preview ↗</button><button class="primary make" id="make">⚡ Make clips</button></div>
+                <div class="make-row"><span class="muted">Make clips = one click: download → AI picks best moments →
+                        captioned 9:16 clips. Uses the Clips / length / layout / caption style below.</span></div>
+                <div id="make-results" hidden>
+                    <div class="progress-track">
+                        <div id="make-progress"></div>
+                    </div><b id="make-status"></b>
+                    <div id="make-grid" class="make-grid"></div>
+                </div>
+                <div class="import-note" id="link-status" role="status">Frames arrive first. Select your areas while the
+                    full source downloads.</div>
+                <div class="progress-track" hidden id="progress-wrap">
+                    <div id="progress"></div>
+                </div>
+                <div id="frames" class="frames"></div><label class="toggle" style="margin-top:12px"><input
+                        id="auto-analyze" type="checkbox" checked> Find highlights automatically when the source is
+                    ready</label>
+            </section>
+            <details class="panel" id="queue-panel">
+                <summary><b>Processing queue</b> · save batches for later</summary>
+                <p class="muted">Queue video links, pause waiting work, or retry an interrupted job. Running work is
+                    kept safe.</p><label>Video links, one per line<textarea id="queue-urls" rows="3"
+                        placeholder="https://www.youtube.com/watch?v=..."></textarea></label>
+                <div class="controls"><label>Start after (optional)<input id="queue-time"
+                            type="datetime-local"></label><button class="secondary" id="queue-add">Add videos to
+                        queue</button><button id="queue-pause">Pause queue</button><button id="queue-refresh">Refresh
+                        queue</button></div>
+                <div id="queue-list"></div>
+            </details>
+            <details class="panel" id="ai-panel">
+                <summary><b>🤖 Long stream? Let a free chatbot pick the moments</b> <span class="pill">NEW</span>
+                </summary>
+                <p class="muted">A chatbot given a 9-hour transcript only really reads the start. So: split the
+                    transcript into small parts, paste each part into any free chatbot (Gemini, ChatGPT, Claude…), paste
+                    its answers back here, and NeonClipping downloads only those sections and makes the clips. Needs a
+                    YouTube video with captions. Nothing is sent anywhere by NeonClipping.</p>
+                <div class="url-row"><input id="ai-url" type="text"
+                        placeholder="YouTube video link (a finished stream or video)"><button class="primary"
+                        id="ai-split">1 · Split into parts</button></div>
+                <div class="controls"><label>Parts (blank = automatic)<input id="ai-parts" type="number" min="1"
+                            max="40" placeholder="auto"></label><label>Moments per part<input id="ai-per" type="number"
+                            min="1" max="10" value="3"></label></div>
+                <div class="muted" id="ai-status"></div>
+                <div id="ai-list"></div>
+                <h3 style="margin-top:16px">2 · Paste the chatbot answers (all parts together is fine)</h3>
+                <textarea id="ai-answers" rows="6"
+                    placeholder='[{"start":"00:12:30","end":"00:13:10","title":"Plane crash","hook":"bhai plane gir gaya"}] … or lines like 12:30-13:10 Plane crash'></textarea>
+                <div class="controls"><button class="secondary" id="ai-read">Read the answers</button><button
+                        class="primary" id="ai-make" disabled>3 · Make clips from these moments</button></div>
+                <div id="ai-moments"></div>
+            </details>
+            <section class="panel creators-panel">
+                <div class="section-head">
+                    <h2>👥 Creators <span class="pill">NEW</span></h2><span class="muted">add a streamer once, clips
+                        start by themselves when they go live</span>
+                </div>
+                <div class="url-row"><input id="creator-url" type="text"
+                        placeholder="Twitch name (kaicenat) or Twitch / YouTube channel link (youtube.com/@name)"><button
+                        class="primary" id="creator-add">+ Add creator</button></div>
+                <div class="import-note">NeonClipping checks every minute. When a creator on your list goes live, it
+                    records the stream and clips the chat spikes with the layout, facecam boxes and caption style you
+                    had selected when you added them (press “Use my current layout” to change it later). One stream at a
+                    time. Keep NeonClipping open; unattended recordings stop after 3 hours (a new one starts if they are
+                    still live), and the big recording file is deleted after the clips are cut.</div>
+                <div id="creator-note" class="muted"></div>
+                <div id="creator-list"></div>
+            </section>
+            <section class="panel live-panel">
+                <div class="section-head">
+                    <h2>⚡ Live clipping <span class="pill">NEW</span></h2><span class="muted">clips while the stream is
+                        on</span>
+                </div>
+                <div class="url-row"><input id="live-url" type="text"
+                        placeholder="Twitch channel link or YouTube Live link"><button class="primary" id="live-start">●
+                        Start live clipping</button></div>
+                <div class="import-note">Records the stream, watches chat speed and cuts a clip around every chat spike
+                    (starting ~24 s before it). Uses your layout, facecam boxes, caption style and language from the
+                    steps below. Works only while the stream is live.</div>
+                <div id="live-box" hidden>
+                    <div class="live-stats" id="live-stats"></div>
+                    <div class="live-actions"><button class="secondary" id="live-now">✂ Clip the last 30 s
+                            now</button><button class="secondary" id="live-stop">■ Stop</button></div>
+                    <div id="live-grid" class="make-grid"></div>
+                </div>
+            </section>
+            <section class="panel">
+                <div class="section-head">
+                    <h2><span class="step">02</span> Make it your format</h2><span class="muted">9:16 · 1080 ×
+                        1920</span>
+                </div>
+                <div class="controls"><label>Caption accuracy<select id="accurate">
+                            <option value="fast" selected>YouTube captions (default)</option>
+                            <option value="best">Best Hindi: large-v3 (slow)</option>
+                        </select></label><label>Mode<select id="mode">
+                            <option value="fast">⚡ Fast (~2-3 min)</option>
+                            <option value="deep">🔬 Deep (slower, smarter)</option>
+                        </select></label><label>Clips<input id="count" type="number" min="1" max="12"
+                            value="4"></label><label>Min length (s)<input id="minlen" type="number" min="5" max="120"
+                            value="30"></label><label>Max length (s)<input id="length" type="number" min="10" max="180"
+                            value="60"></label><button class="secondary" id="analyze">✦ Find highlights</button><span
+                        class="muted">Movement + audio activity.<br>Review each candidate.</span></div>
+                <div class="controls output-controls"><label>Output format<select id="aspect">
+                            <option value="vertical">9:16 · Shorts / Reels</option>
+                            <option value="square">1:1 · Square</option>
+                            <option value="portrait">4:5 · Feed</option>
+                            <option value="threefour">3:4 · Portrait</option>
+                            <option value="landscape">16:9 · YouTube</option>
+                        </select></label><label>Resolution<select id="resolution">
+                            <option value="720">720</option>
+                            <option value="1080" selected>1080</option>
+                            <option value="2160">2160 · 4K</option>
+                        </select></label><label>Frame rate<select id="fps">
+                            <option value="0">Keep original</option>
+                            <option value="24">24 fps</option>
+                            <option value="30">30 fps</option>
+                            <option value="60">60 fps</option>
+                        </select></label></div>
+                <div class="layout-grid" id="layouts"><button class="choice active" data-layout="stack"><span
+                            class="mini stack-mini"><i></i><i></i></span><b>Face + gameplay</b><small>Choose both
+                            areas</small></button><button class="choice" data-layout="blur"><span
+                            class="mini blur-mini"><i></i></span><b>Blurred fill</b><small>Keep the wider
+                            frame</small></button><button class="choice" data-layout="fill"><span
+                            class="mini fill-mini"><i></i></span><b>Fill screen</b><small>Bold centre
+                            crop</small></button><button class="choice" data-layout="game"><span
+                            class="mini game-mini"><i></i></span><b>Gameplay only</b><small>Use your selected
+                            area</small></button></div>
+                <div class="preset-row"><b>Facecam position</b><button class="chip" data-preset="tl">↖
+                        Top-left</button><button class="chip" data-preset="tr">↗ Top-right</button><button class="chip"
+                        data-preset="bl">↙ Bottom-left</button><button class="chip" data-preset="br">↘
+                        Bottom-right</button><button class="chip" data-preset="bc">⬇ Bottom-centre</button><button
+                        class="chip" data-preset="none">No facecam</button><span class="muted" id="preset-note">Pick
+                        one, or draw the boxes yourself in step 03.</span></div>
+            </section>
+            <section class="panel">
+                <div class="section-head">
+                    <h2><span class="step">03</span> Frame your moment</h2><span class="pill" id="source-mode">NO SOURCE
+                        YET</span>
+                </div>
+                <div class="candidate-row"><select id="recent">
+                        <option>No highlights yet</option>
+                    </select><button id="import">Open highlight</button></div>
+                <div class="workspace">
+                    <div class="source-side">
+                        <div class="toolbar"><button id="cam" class="active">▣ Facecam area</button><button id="game">▣
+                                Gameplay area</button><button id="save">Save layout</button><button id="load">Load
+                                layout</button></div>
+                        <div class="canvas-wrap"><canvas id="source" width="960" height="540"></canvas>
+                            <div id="empty-source">Your preview frames appear here.<small>Draw the facecam and gameplay
+                                    boxes directly on a frame.</small></div>
+                        </div><video id="video" controls preload="metadata"></video>
+                        <div class="range-row"><label>Start / sec<input id="start" type="number" value="0" min="0"
+                                    step=".1"></label><label>End / sec<input id="end" type="number" value="30" min="0"
+                                    step=".1"></label><label id="height-control">Face size <span
+                                    id="height-value">32%</span><input id="top" type="range" min="20" max="50"
+                                    value="32"></label></div>
+                    </div>
+                    <aside class="preview-side">
+                        <div class="eyebrow">YOUR VERTICAL CUT</div><canvas id="preview" width="540"
+                            height="960"></canvas><small>Layout + caption style preview</small><label
+                            class="toggle"><input id="safe-zones" type="checkbox"> Show platform safe zones</label>
+                    </aside>
+                </div>
+            </section>
+            <section class="panel">
+                <div class="section-head">
+                    <h2><span class="step">04</span> Give it a voice</h2><label class="toggle"><input id="captions"
+                            type="checkbox" checked> Burn in subtitles</label>
+                </div>
+                <div class="caption-styles"><button class="caption-choice active gta" data-style="gta"><span>THIS IS
+                            <strong>WILD</strong></span><b>GTA Neon</b><small>Pink / cyan / electric
+                            lime</small></button><button class="caption-choice bold" data-style="bold"><span>THIS IS
+                            <strong>WILD</strong></span><b>Impact</b><small>Bold active-word
+                            highlight</small></button><button class="caption-choice hormozi"
+                        data-style="hormozi"><span>THIS IS <strong
+                                style="color:#00ffff">WILD</strong></span><b>Hormozi</b><small>White + cyan pop, thick
+                            outline</small></button><button class="caption-choice mrbeast" data-style="mrbeast"><span
+                            style="color:#ffff00">THIS IS <strong
+                                style="color:#ff6600">WILD</strong></span><b>MrBeast</b><small>Yellow + orange, huge
+                            outline</small></button><button class="caption-choice clean" data-style="clean"><span>This
+                            is wild.</span><b>Clean</b><small>Quiet, readable subtitles</small></button></div>
+                <div class="controls"><label>Spoken language<select id="language">
+                            <option value="">Auto (Hindi → Hinglish)</option>
+                            <option value="hinglish">Hinglish (Hindi in English letters)</option>
+                            <option value="hi">हिंदी (Devanagari)</option>
+                            <option value="en">English</option>
+                        </select></label><label>Caption height<input id="caption-y" type="range" min="500" max="1750"
+                            value="1450"></label><button id="transcribe" class="secondary">Generate subtitles</button>
+                </div>
+                <p class="muted">Transcribes your selected time range locally. First use downloads a speech model. Check
+                    names and Hindi / English words before posting.</p><label class="toggle"><input id="timing-editor"
+                        type="checkbox"> Edit word timings</label>
+                <div class="controls"><label>Shift captions (seconds)<input id="caption-shift" type="number" step="0.1"
+                            value="0.5"></label><button id="shift-captions">Shift all words</button></div>
+                <div id="words" class="word-editor"></div>
+                <div class="copy-grid"><label>Opening hook / optional<input id="hook"
+                            placeholder="Add your own opening line" maxlength="65"></label><label>Clip title<input
+                            id="clip-title" placeholder="Give this clip a name"></label></div><label>Post
+                    caption<textarea id="post-caption" rows="2"
+                        placeholder="Generate subtitles to draft a caption, then edit it in your voice."></textarea></label>
+            </section>
+            <section class="panel" id="style-panel">
+                <div class="section-head">
+                    <h2><span class="step">05</span> Style &amp; extras</h2><span class="pill">NEW</span>
+                </div>
+                <p class="muted">Optional. Wrap the clip in a post card, add a padded card on a background, a logo, a
+                    credit line, an outro ribbon and a music bed. These apply to Make clips, single exports and “Edit
+                    saved clips”.</p>
+                <div class="controls">
+                    <label>Template<select id="st-template">
+                            <option value="none">None (use the layout above)</option>
+                            <option value="x_light">X post · light</option>
+                            <option value="x_dark">X post · dark</option>
+                            <option value="tiktok_hook">TikTok hook</option>
+                            <option value="breaking_news">Breaking news</option>
+                        </select></label>
+                    <label>Name on the card<input id="st-tpl-name" type="text" maxlength="28"
+                            placeholder="Your Name"></label>
+                    <label>@handle<input id="st-tpl-handle" type="text" maxlength="28" placeholder="yourhandle"></label>
+                </div>
+                <div class="controls">
+                    <label>Background<select id="st-bg-mode">
+                            <option value="none">None</option>
+                            <option value="blur">Blurred copy</option>
+                            <option value="color">Colour</option>
+                            <option value="gradient">Gradient</option>
+                            <option value="image">My image</option>
+                        </select></label>
+                    <label>Colour<input id="st-bg-color" type="color" value="#0b0912"></label>
+                    <label>Colour 2<input id="st-bg-color2" type="color" value="#ff4ba5"></label>
+                    <label><span>Padding <output id="st-padding-o">0</output>%</span><input id="st-padding" type="range"
+                            min="0" max="25" value="0"></label>
+                    <label><span>Rounded corners <output id="st-radius-o">0</output></span><input id="st-radius"
+                            type="range" min="0" max="80" value="0"></label>
+                    <label><span>Dim image <output id="st-dim-o">25</output>%</span><input id="st-bg-dim" type="range"
+                            min="0" max="90" value="25"></label>
+                    <label class="upload">↑ Background image<input id="st-bg-file" type="file" accept="image/*"
+                            hidden></label><span class="muted" id="st-bg-name"></span>
+                </div>
+                <div class="controls">
+                    <label class="upload">↑ Logo / watermark<input id="st-wm-file" type="file" accept="image/*"
+                            hidden></label><span class="muted" id="st-wm-name">no logo</span>
+                    <label>Position<select id="st-wm-pos">
+                            <option value="tr">Top-right</option>
+                            <option value="tl">Top-left</option>
+                            <option value="br">Bottom-right</option>
+                            <option value="bl">Bottom-left</option>
+                        </select></label>
+                    <label><span>Size <output id="st-wm-size-o">16</output>%</span><input id="st-wm-size" type="range"
+                            min="5" max="40" value="16"></label>
+                    <label><span>Opacity <output id="st-wm-op-o">85</output>%</span><input id="st-wm-opacity"
+                            type="range" min="10" max="100" value="85"></label>
+                </div>
+                <div class="controls">
+                    <label>Credit line<input id="st-credit" type="text" maxlength="60"
+                            placeholder="Clip: Channel name"></label>
+                    <label class="check"><input id="st-credit-auto" type="checkbox"> Use the video’s channel
+                        name</label>
+                    <label>Outro ribbon<input id="st-outro" type="text" maxlength="40"
+                            placeholder="FOLLOW @yourhandle"></label>
+                    <label>Outro seconds<input id="st-outro-sec" type="number" min="1.5" max="8" step=".5"
+                            value="3"></label>
+                </div>
+                <div class="controls">
+                    <label class="upload">↑ Music track<input id="st-music-file" type="file" accept="audio/*"
+                            hidden></label><span class="muted" id="st-music-name">no music</span>
+                    <label><span>Volume <output id="st-mv-o">15</output>%</span><input id="st-music-vol" type="range"
+                            min="0" max="100" value="15"></label>
+                    <label><span>Peak volume <output id="st-mp-o">85</output>%</span><input id="st-music-peak"
+                            type="range" min="0" max="100" value="85"></label>
+                    <label>Riser seconds<input id="st-music-riser" type="number" min="1" max="15" step="1"
+                            value="4"></label>
+                </div>
+                <div class="import-note">The music sits low under the voice, then rises to its peak volume in the last
+                    seconds. Your logo, music and image stay on this computer.</div>
+                <div class="controls"><button class="secondary" id="st-reset">Reset all style options</button></div>
+            </section>
+            <section class="panel social-panel" id="social-panel">
+                <div class="section-head">
+                    <h2><span class="step">06</span> Publish to YouTube &amp; Instagram <span class="pill" style="color:#d4fb58">DIRECT</span></h2>
+                    <span class="muted">1-Click Shorts &amp; Reels Upload</span>
+                </div>
+                <p class="muted">Upload your finished clip directly to YouTube Shorts or Instagram Reels, or copy ready-made title, description and hashtags in 1 click.</p>
+                <div class="controls" style="margin-top:14px">
+                    <button class="primary yt-upload-btn" id="panel-yt-btn">▶ Upload to YouTube Shorts</button>
+                    <button class="primary ig-upload-btn" id="panel-ig-btn">📸 Upload to Instagram Reels</button>
+                    <button class="secondary" id="panel-share-btn">📲 Quick Device Share</button>
+                </div>
+            </section>
+            <section class="panel" id="saved-edit" hidden>
+                <h2>Edit saved clips</h2>
+                <h3 style="margin-top:18px">Speaker position &amp; shape · 11 layouts</h3>
+                <div id="edit-layouts" class="layout-grid"></div><label>Speaker size<input id="edit-top" type="range"
+                        min="20" max="50" value="32"></label>
+                <p class="muted">Reuse the saved video, selected moments and subtitle timings. Only the final MP4 is
+                    exported again. Each clip keeps its own transcript.</p>
+                <div class="controls" style="margin-top:14px"><button class="primary" id="apply-video">Apply to all
+                        clips of this video</button><button class="secondary" id="apply-one">Only this
+                        clip</button><button id="download-bundle">Download video’s clips ZIP</button><a id="bundle-link"
+                        hidden download>Download ZIP</a><button class="secondary del-saved-btn" id="delete-saved-clip">🗑 Delete this clip</button></div>
+            </section>
+            <section class="export-bar">
+                <div><b id="status" role="status">Add a video to begin.</b>
+                    <p id="detail">Your exports stay on this computer and appear in My clips.</p>
+                </div><button id="batch">Export video highlights</button><button class="primary" id="export">Export clip
+                    ↗</button><button class="primary yt-upload-btn" id="export-yt-btn">▶ YouTube Shorts</button><button class="primary ig-upload-btn" id="export-ig-btn">📸 Instagram Reels</button><a id="download" class="download" hidden download="neoncut-clip.mp4">↓ Download MP4</a><a
+                    id="srt" hidden>↓ Subtitles SRT</a><a id="vtt" hidden>↓ WebVTT</a>
+            </section>
+        </section>
+        <section id="library-view" hidden>
+            <section class="library-heading">
+                <h2>Your clips, <em>ready to go.</em></h2><button id="refresh-library">Refresh library</button>
+            </section>
+            <p class="muted">Finished exports stay in the studio's data folder. Download an MP4 to keep or share it.</p>
+            <div id="library" class="library-grid"></div>
+        </section>
+        <section id="social-view" hidden>
+            <section class="library-heading">
+                <h2>Direct Social Upload <em>YouTube &amp; Instagram</em></h2><button id="refresh-social-view">Refresh clips</button>
+            </section>
+            <p class="muted">All your finished clips ready to publish. Click YouTube Shorts or Instagram Reels to upload or copy formatted tags in 1 click.</p>
+            <div id="social-grid" class="library-grid"></div>
+        </section>
+
+        <!-- Social Upload & Share Modal -->
+        <dialog id="social-dialog" class="social-modal">
+            <div class="social-modal-head">
+                <div>
+                    <h3>🚀 Direct Social Upload &amp; Share</h3>
+                    <small id="sm-clip-title" class="muted">Loading clip…</small>
+                </div>
+                <button id="sm-close" class="modal-close-btn" aria-label="Close">&times;</button>
+            </div>
+
+            <div class="social-tabs">
+                <button class="social-tab active" data-tab="yt">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff4ba5"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    YouTube Shorts
+                </button>
+                <button class="social-tab" data-tab="ig">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#58e8f7"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Instagram Reels
+                </button>
+                <button class="social-tab" data-tab="share">
+                    📲 Quick Share
+                </button>
+            </div>
+
+            <!-- YouTube Tab -->
+            <div id="tab-yt" class="social-tab-pane">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
+                    <span id="yt-conn-badge" class="pill">○ Not connected</span>
+                    <details id="yt-config-details" style="font-size:12px; cursor:pointer; width:100%; margin-top:4px">
+                        <summary style="color:var(--cyan); font-weight:600">⚙ API Config (Google Client ID &amp; Secret)</summary>
+                        <div style="margin-top:8px; padding:12px; background:#100c17; border:1px solid #2d243a; border-radius:8px; display:flex; flex-direction:column; gap:8px">
+                            <div style="font-size:11px; color:#a99db7; line-height:1.4">
+                                Google Cloud Console se <b>OAuth 2.0 Client</b> ID aur Secret yahan daalein:
+                            </div>
+                            <label style="font-size:11px; margin:0">Google Client ID
+                                <input id="yt-client-id" type="text" placeholder="xxxx.apps.googleusercontent.com" style="margin-top:3px; font-size:12px; padding:6px 8px; width:100%">
+                            </label>
+                            <label style="font-size:11px; margin:0">Google Client Secret
+                                <input id="yt-client-secret" type="password" placeholder="GOCSPX-xxxx" style="margin-top:3px; font-size:12px; padding:6px 8px; width:100%">
+                            </label>
+                            <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#a99db7; margin-top:2px">
+                                <span>Ya <b>client_secret.json</b> upload karein:</span>
+                                <input type="file" id="yt-file-secret" accept=".json" style="font-size:11px; flex:1">
+                            </div>
+                            <div style="font-size:11px; background:#181324; border:1px solid #3d2f53; border-radius:6px; padding:10px; margin-top:2px">
+                                <div style="color:#ffb84b; font-weight:bold; margin-bottom:4px">⚠️ Important for Google Cloud Console:</div>
+                                <div style="color:#cfc5db; font-size:11px; line-height:1.4; margin-bottom:6px">
+                                    Google Console me apne Client ID ke <b>Authorized redirect URIs</b> me ye dono URIs add karein:
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px; background:#0b0912; padding:5px 8px; border-radius:4px; margin-bottom:4px">
+                                    <code id="yt-uri-1" style="color:#58e8f7; font-size:11px; flex:1">http://127.0.0.1:8770/social/youtube/oauth2callback</code>
+                                    <button type="button" id="copy-uri-1" class="secondary" style="font-size:10px; padding:2px 8px">Copy</button>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px; background:#0b0912; padding:5px 8px; border-radius:4px">
+                                    <code id="yt-uri-2" style="color:#58e8f7; font-size:11px; flex:1">http://localhost:8770/social/youtube/oauth2callback</code>
+                                    <button type="button" id="copy-uri-2" class="secondary" style="font-size:10px; padding:2px 8px">Copy</button>
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:8px; margin-top:4px">
+                                <button type="button" id="yt-save-secret-btn" class="secondary" style="font-size:11px; padding:8px 12px; flex:1">💾 Save Credentials</button>
+                                <button type="button" id="yt-auth-btn" class="primary" style="font-size:11px; padding:8px 12px; flex:1">🔗 Connect Google Account</button>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <label>Video Title (Shorts)
+                    <input id="yt-title" maxlength="100" placeholder="Catchy Title #Shorts">
+                </label>
+                <label>Description
+                    <textarea id="yt-desc" rows="3" placeholder="Description &amp; links"></textarea>
+                </label>
+                <div style="display:flex; gap:10px">
+                    <label style="flex:1">Tags (comma separated)
+                        <input id="yt-tags" placeholder="Shorts, Viral, Gaming">
+                    </label>
+                    <label style="width:140px">Visibility
+                        <select id="yt-privacy">
+                            <option value="public">Public</option>
+                            <option value="unlisted">Unlisted</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="social-actions-row">
+                    <button id="yt-direct-upload" class="primary">⚡ Direct YouTube Upload</button>
+                    <button id="yt-open-studio" class="secondary">📋 Copy Info &amp; Open YouTube Studio</button>
+                </div>
+            </div>
+
+            <!-- Instagram Tab -->
+            <div id="tab-ig" class="social-tab-pane" hidden>
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <span id="ig-conn-badge" class="pill">○ Instagram</span>
+                </div>
+                <label>Reel Caption &amp; Hashtags
+                    <textarea id="ig-caption" rows="4" placeholder="Write caption and trending hashtags..."></textarea>
+                </label>
+                <details style="font-size:12px; cursor:pointer" open>
+                    <summary style="color:var(--cyan)">Direct Reel API Login (Optional)</summary>
+                    <div style="display:flex; gap:10px; margin-top:8px">
+                        <label style="flex:1">Instagram Username
+                            <input id="ig-user" placeholder="your_username">
+                        </label>
+                        <label style="flex:1">Password
+                            <input id="ig-pass" type="password" placeholder="••••••••">
+                        </label>
+                    </div>
+                </details>
+                <div class="social-actions-row">
+                    <button id="ig-direct-upload" class="primary">⚡ Direct Instagram Upload</button>
+                    <button id="ig-open-web" class="secondary">📋 Copy Caption &amp; Open Instagram Web</button>
+                </div>
+            </div>
+
+            <!-- Quick Share Tab -->
+            <div id="tab-share" class="social-tab-pane" hidden>
+                <p class="muted">Share this clip directly with apps installed on your device (Instagram, YouTube, WhatsApp, Telegram, etc.):</p>
+                <div class="social-actions-row">
+                    <button id="share-native-btn" class="primary">📲 Share to Device Apps (Share Sheet)</button>
+                    <button id="share-download-btn" class="secondary">↓ Download Video MP4</button>
+                </div>
+                <div style="margin-top:12px; padding:12px; background:#100c17; border-radius:10px; font-size:12px">
+                    <b>📱 Want to upload from your phone?</b>
+                    <p class="muted" style="margin-top:4px">Open NeonClipping on your phone browser using your local Wi-Fi IP to directly save &amp; share to Instagram/YouTube mobile apps!</p>
+                </div>
+            </div>
+
+            <!-- Status Box -->
+            <div id="sm-status" class="social-status-box" hidden>
+                <span id="sm-status-msg" style="font-weight:600">Preparing upload…</span>
+                <div class="social-progress-track">
+                    <div id="sm-progress-bar" class="social-progress-bar"></div>
+                </div>
+            </div>
+        </dialog>
+
+        <footer>NEONCLIPPING STUDIO <span>Review your moment. Keep the creator's campaign brief in view.</span></footer>
+    </main>
+    <script src="/assets/app.js?v=20261124-editbtn"></script>
+    <script src="/assets/extras.js?v=20261123-del"></script>
+    <script src="/assets/transcripts.js?v=20261123-del"></script>
+    <script src="/assets/vision.js?v=20261123-del"></script>
+    <script src="/assets/social.js?v=20261124-editbtn"></script>
+</body>
+
+</html>

@@ -8,3 +8,6 @@ faster-whisper>=1.2,<2
 opencv-python-headless
 streamlink
 pytchat
+google-api-python-client
+google-auth-oauthlib
+instagrapi

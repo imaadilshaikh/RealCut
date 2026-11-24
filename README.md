@@ -4,11 +4,9 @@
 
 NeonClipping turns long YouTube / Twitch / Kick videos (or your own MP4) into vertical, captioned clips with a title and hook for each. Everything runs on your machine: no account, no subscription, no upload.
 
-[![Star on GitHub](https://img.shields.io/github/stars/iamajmeena/neonclipping?style=for-the-badge&logo=github&label=Star%20on%20GitHub)](https://github.com/iamajmeena/neonclipping) [![Instagram](https://img.shields.io/badge/Follow-%40iamajmeena-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/iamajmeena/)
+[![Star on GitHub](https://img.shields.io/badge/GitHub-imaadilshaikh-181717?style=for-the-badge&logo=github)](https://github.com/imaadilshaikh) [![Instagram](https://img.shields.io/badge/Follow-%40imaadilshaikh__-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/imaadilshaikh_/)
 
-🌐 **Website with one-click Windows setup:** <https://iamajmeena.github.io/neonclipping/>
-
-**Made by [Ajay K Meena](https://www.instagram.com/iamajmeena/)** (Director, DOP, colorist, DaVinci Resolve educator, Jaipur). If NeonClipping saves you time, please ⭐ star the repo and follow [@iamajmeena](https://www.instagram.com/iamajmeena/) on Instagram.
+**Made by [Aadil Shaikh](https://www.instagram.com/imaadilshaikh_/)**. If NeonClipping saves you time, please ⭐ star on [GitHub](https://github.com/imaadilshaikh) and follow [@imaadilshaikh_](https://www.instagram.com/imaadilshaikh_/) on Instagram.
 
 ![demo](docs/demo.gif)
 

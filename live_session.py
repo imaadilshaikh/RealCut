@@ -168,8 +168,8 @@ class LiveSession:
                 import json as _json
                 title = (_json.loads(r.stdout.decode('utf-8', 'replace') or '{}').get('metadata') or {}).get('title') or ''   # utf-8, not the Windows code page
             else:
-                import yt_dlp
-                with yt_dlp.YoutubeDL({'quiet': True, 'no_warnings': True, 'skip_download': True, 'noplaylist': True, 'socket_timeout': 20}) as y:
+                from ytdl_helper import create_ytdl
+                with create_ytdl({'skip_download': True, 'socket_timeout': 20}) as y:
                     title = y.extract_info(self.url, download=False).get('title') or ''
             self._set(title=clean_title(title))
         except Exception:

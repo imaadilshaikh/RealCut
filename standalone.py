@@ -53,10 +53,11 @@ def attach(app,DATA,state,probe):
                 msg=f'Downloading 720p: {got/1048576:.1f} MB'+(f' / {total/1048576:.1f} MB' if total else '')
                 state[job].update(message=msg,stage=msg,progress=min(.3,got/total*.3) if total else .1)
             elif event.get('status')=='finished':state[job].update(message='Merging source video',stage='Merging source video')
-        options={'noplaylist':True,'format':'best[height<=720][ext=mp4]/bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720]',
+        from ytdl_helper import create_ytdl
+        options={'format':'best[height<=720][ext=mp4]/bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720]',
                  'outtmpl':str(directory/'source.%(ext)s'),'merge_output_format':'mp4','socket_timeout':15,'retries':2,'fragment_retries':2,
-                 'extractor_retries':1,'progress_hooks':[progress],'quiet':True,'no_warnings':True}
-        with yt_dlp.YoutubeDL(options) as downloader:downloader.download([url])
+                 'extractor_retries':1,'progress_hooks':[progress]}
+        with create_ytdl(options) as downloader:downloader.download([url])
         src=next((p for p in directory.iterdir() if p.suffix in ('.mp4','.mkv','.webm')),None)
         if src is None:raise RuntimeError('Download produced no playable file. Upload the original MP4 instead.')
         if src.suffix=='.mp4':shutil.move(str(src),str(target))

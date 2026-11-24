@@ -43,5 +43,6 @@ __pycache__/
 !extras.js
 !transcripts.js
 !vision.js
+!social.js
 
 !mobile.html
