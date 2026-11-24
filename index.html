@@ -3,57 +3,70 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="color-scheme" content="dark">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>NeonClipping</title>
-    <link rel="stylesheet" href="/assets/style.css?v=20261124-editbtn">
+    <title>RealCut Studio</title>
+    <link rel="icon" type="image/png" href="/brand/RealCut_icon_clean.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Archivo+Black&family=Anton&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/style.css?v=20261124-realcut">
 </head>
 
 <body>
-    <aside class="sidebar"><a class="brand" href="/">N↗ <div>NEONCLIPPING<small>OPEN-SOURCE CLIP ENGINE</small></div>
+    <aside class="sidebar">
+        <a class="brand" href="/" style="display:flex; align-items:center; gap:11px; text-decoration:none; margin-bottom:28px">
+            <img src="/brand/RealCut_icon_clean.png" alt="RealCut" style="width:38px; height:38px; border-radius:10px; object-fit:contain" onerror="this.src='/brand/favicon.svg'">
+            <div>
+                <div style="font-size:19px; font-weight:700; color:#F4EEEA; letter-spacing:-0.03em; line-height:1.1">RealCut</div>
+                <small style="font-size:10px; color:#A99A91; font-weight:600; letter-spacing:0.8px; margin-top:2px">CLIP STUDIO</small>
+            </div>
         </a>
-        <div class="nav-label">WORKSPACE</div><button class="nav active" data-view="editor">◫ &nbsp; Create
-            clips</button><button class="nav" data-view="library">▦ &nbsp; My clips <span
-                id="library-count">0</span></button><button class="nav" data-view="social">🚀 &nbsp; YouTube &amp; Insta</button>
-        <div class="side-note">● Your machine. Your clips.<p>Independent local processing.<br>No clipping subscription.
-            </p>
+        <div class="nav-label">WORKSPACE</div>
+        <button class="nav active" data-view="editor">◫ &nbsp; Create clips</button>
+        <button class="nav" data-view="library">▦ &nbsp; My clips <span id="library-count">0</span></button>
+        <button class="nav" data-view="social">🚀 &nbsp; YouTube &amp; Insta</button>
+        <div class="side-note">
+            <div style="display:flex; align-items:center; gap:8px; font-weight:600; color:#F4EEEA; margin-bottom:4px">
+                <span class="led"></span> Local AI Engine
+            </div>
+            <p>Independent local processing.<br>No subscription or upload.</p>
         </div>
-        <div class="signature">BUILT FOR THE NEXT HIGHLIGHT.<small>by <a
-                    href="https://www.instagram.com/imaadilshaikh_/" target="_blank" rel="noopener"
-                    style="color:inherit">Aadil Shaikh</a> · <a href="https://github.com/imaadilshaikh" target="_blank"
-                    rel="noopener" style="color:inherit">open-source</a></small></div>
+        <div class="signature">
+            BUILT FOR CREATORS
+            <small>by <a href="https://www.instagram.com/imaadilshaikh_/" target="_blank" rel="noopener" style="color:#FFB27A; text-decoration:none">Aadil Shaikh</a> · <a href="https://github.com/imaadilshaikh" target="_blank" rel="noopener" style="color:inherit">open-source</a></small>
+        </div>
     </aside>
     <main>
         <header>
-            <div class="eyebrow">THE CLIP STARTS HERE</div>
+            <div class="eyebrow" style="color:var(--brand); font-weight:700; font-size:11px; letter-spacing:1px">REALCUT STUDIO</div>
             <div class="top">
-                <h1>Long video. <em>Big moments.</em></h1><span class="social"><a class="gh"
+                <h1 style="color:var(--brand-ink)">Long video. <em>Big moments.</em></h1><span class="social"><a class="gh"
                         href="https://github.com/imaadilshaikh" target="_blank" rel="noopener">★ Star on
                         GitHub</a><a class="ig" href="https://www.instagram.com/imaadilshaikh_/" target="_blank"
                         rel="noopener">Follow @imaadilshaikh_</a><button class="don" id="donate" hidden>♥
                         Donate</button></span>
                 <dialog id="donate-dialog">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                        <b style="font-size:16px; color:#fbf6ff">Support NeonClipping ♥</b>
-                        <button id="don-close" type="button" style="background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; padding:2px 6px; line-height:1">✕</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+                        <b style="font-size:16px; color:var(--brand-ink); font-weight:700">Support RealCut Studio ♥</b>
+                        <button id="don-close" type="button" style="background:none; border:none; color:var(--dim); font-size:18px; cursor:pointer; padding:2px 6px; line-height:1">✕</button>
                     </div>
-                    <p style="font-size:12px; margin:0 0 12px; color:var(--muted); line-height:1.4">
-                        Free and open-source tool built by <b>Aadil Shaikh</b>. A direct donation helps maintain and improve it!
+                    <p style="font-size:13px; margin:0 0 14px; color:var(--dim); line-height:1.4">
+                        Free and open-source studio built by <b>Aadil Shaikh</b>. A direct donation helps maintain and improve it!
                     </p>
 
                     <!-- Direct UPI Donation Section -->
-                    <div id="don-upi-box" style="background:#130f1c; border:1px solid #2d243a; border-radius:12px; padding:14px; text-align:center; margin-bottom:12px" hidden>
-                        <div style="font-size:11px; font-weight:700; color:#58e8f7; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px">
+                    <div id="don-upi-box" style="background:var(--muted); border:1px solid var(--line); border-radius:12px; padding:16px; text-align:center; margin-bottom:12px" hidden>
+                        <div style="font-size:11px; font-weight:700; color:var(--brand-deep); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px">
                             Scan &amp; Pay via Any UPI App (GPay / PhonePe / Paytm)
                         </div>
-                        <div style="background:#fff; border-radius:10px; padding:8px; display:inline-block; margin-bottom:10px; box-shadow:0 4px 15px rgba(0,0,0,0.4)">
+                        <div style="background:#fff; border-radius:12px; padding:10px; display:inline-block; margin-bottom:12px; box-shadow:0 4px 16px rgba(42,26,18,0.06); border:1px solid var(--line-2)">
                             <img id="don-upi-qr" src="" alt="UPI QR Code" style="width:160px; height:160px; display:block">
                         </div>
-                        <div style="background:#0b0812; border:1px solid #30263f; border-radius:8px; padding:8px 10px; display:flex; align-items:center; gap:8px; margin-bottom:10px">
-                            <code id="don-upi-id" style="font-size:12px; color:#d4fb58; flex:1; word-break:break-all; text-align:left">9205177294@fam</code>
+                        <div style="background:#fff; border:1px solid var(--line-2); border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:8px; margin-bottom:12px">
+                            <code id="don-upi-id" style="font-size:13px; color:var(--brand-ink); font-weight:700; flex:1; word-break:break-all; text-align:left">9205177294@fam</code>
                             <button type="button" id="don-copy-upi" class="secondary" style="font-size:11px; padding:5px 10px; white-space:nowrap">📋 Copy</button>
                         </div>
-                        <a id="don-upi-app" href="#" class="primary" style="display:block; text-decoration:none; text-align:center; padding:10px; border-radius:8px; font-size:12px; font-weight:bold; background:linear-gradient(90deg,#7c3aed,#ec4899); color:#fff">
+                        <a id="don-upi-app" href="#" class="primary" style="display:block; text-decoration:none; text-align:center; padding:11px; border-radius:8px; font-size:13px; font-weight:700; background:var(--brand); color:var(--brand-ink)">
                             📲 Open UPI App on Mobile
                         </a>
                     </div>
@@ -109,8 +122,8 @@
                 </summary>
                 <p class="muted">A chatbot given a 9-hour transcript only really reads the start. So: split the
                     transcript into small parts, paste each part into any free chatbot (Gemini, ChatGPT, Claude…), paste
-                    its answers back here, and NeonClipping downloads only those sections and makes the clips. Needs a
-                    YouTube video with captions. Nothing is sent anywhere by NeonClipping.</p>
+                    its answers back here, and RealCut downloads only those sections and makes the clips. Needs a
+                    YouTube video with captions. Nothing is sent anywhere by RealCut.</p>
                 <div class="url-row"><input id="ai-url" type="text"
                         placeholder="YouTube video link (a finished stream or video)"><button class="primary"
                         id="ai-split">1 · Split into parts</button></div>
@@ -134,10 +147,10 @@
                 <div class="url-row"><input id="creator-url" type="text"
                         placeholder="Twitch name (kaicenat) or Twitch / YouTube channel link (youtube.com/@name)"><button
                         class="primary" id="creator-add">+ Add creator</button></div>
-                <div class="import-note">NeonClipping checks every minute. When a creator on your list goes live, it
+                <div class="import-note">RealCut checks every minute. When a creator on your list goes live, it
                     records the stream and clips the chat spikes with the layout, facecam boxes and caption style you
                     had selected when you added them (press “Use my current layout” to change it later). One stream at a
-                    time. Keep NeonClipping open; unattended recordings stop after 3 hours (a new one starts if they are
+                    time. Keep RealCut open; unattended recordings stop after 3 hours (a new one starts if they are
                     still live), and the big recording file is deleted after the clips are cut.</div>
                 <div id="creator-note" class="muted"></div>
                 <div id="creator-list"></div>
@@ -427,38 +440,38 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
                     <span id="yt-conn-badge" class="pill">○ Not connected</span>
                     <details id="yt-config-details" style="font-size:12px; cursor:pointer; width:100%; margin-top:4px">
-                        <summary style="color:var(--cyan); font-weight:600">⚙ API Config (Google Client ID &amp; Secret)</summary>
-                        <div style="margin-top:8px; padding:12px; background:#100c17; border:1px solid #2d243a; border-radius:8px; display:flex; flex-direction:column; gap:8px">
-                            <div style="font-size:11px; color:#a99db7; line-height:1.4">
+                        <summary style="color:var(--brand-deep); font-weight:600">⚙ API Config (Google Client ID &amp; Secret)</summary>
+                        <div style="margin-top:8px; padding:14px; background:var(--muted); border:1px solid var(--line); border-radius:10px; display:flex; flex-direction:column; gap:10px">
+                            <div style="font-size:12px; color:var(--dim); line-height:1.4">
                                 Google Cloud Console se <b>OAuth 2.0 Client</b> ID aur Secret yahan daalein:
                             </div>
                             <label style="font-size:11px; margin:0">Google Client ID
-                                <input id="yt-client-id" type="text" placeholder="xxxx.apps.googleusercontent.com" style="margin-top:3px; font-size:12px; padding:6px 8px; width:100%">
+                                <input id="yt-client-id" type="text" placeholder="xxxx.apps.googleusercontent.com" style="margin-top:3px; font-size:12px; padding:8px 10px; width:100%">
                             </label>
                             <label style="font-size:11px; margin:0">Google Client Secret
-                                <input id="yt-client-secret" type="password" placeholder="GOCSPX-xxxx" style="margin-top:3px; font-size:12px; padding:6px 8px; width:100%">
+                                <input id="yt-client-secret" type="password" placeholder="GOCSPX-xxxx" style="margin-top:3px; font-size:12px; padding:8px 10px; width:100%">
                             </label>
-                            <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#a99db7; margin-top:2px">
+                            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--dim); margin-top:2px">
                                 <span>Ya <b>client_secret.json</b> upload karein:</span>
                                 <input type="file" id="yt-file-secret" accept=".json" style="font-size:11px; flex:1">
                             </div>
-                            <div style="font-size:11px; background:#181324; border:1px solid #3d2f53; border-radius:6px; padding:10px; margin-top:2px">
-                                <div style="color:#ffb84b; font-weight:bold; margin-bottom:4px">⚠️ Important for Google Cloud Console:</div>
-                                <div style="color:#cfc5db; font-size:11px; line-height:1.4; margin-bottom:6px">
+                            <div style="font-size:12px; background:#fff; border:1px solid var(--line-2); border-radius:8px; padding:12px; margin-top:2px">
+                                <div style="color:var(--brand-deep); font-weight:bold; margin-bottom:4px">⚠️ Important for Google Cloud Console:</div>
+                                <div style="color:var(--dim); font-size:11px; line-height:1.4; margin-bottom:8px">
                                     Google Console me apne Client ID ke <b>Authorized redirect URIs</b> me ye dono URIs add karein:
                                 </div>
-                                <div style="display:flex; align-items:center; gap:6px; background:#0b0912; padding:5px 8px; border-radius:4px; margin-bottom:4px">
-                                    <code id="yt-uri-1" style="color:#58e8f7; font-size:11px; flex:1">http://127.0.0.1:8770/social/youtube/oauth2callback</code>
-                                    <button type="button" id="copy-uri-1" class="secondary" style="font-size:10px; padding:2px 8px">Copy</button>
+                                <div style="display:flex; align-items:center; gap:6px; background:var(--muted); padding:6px 10px; border-radius:6px; margin-bottom:6px; border:1px solid var(--line)">
+                                    <code id="yt-uri-1" style="color:var(--brand-ink); font-weight:600; font-size:11px; flex:1">http://127.0.0.1:8770/social/youtube/oauth2callback</code>
+                                    <button type="button" id="copy-uri-1" class="secondary" style="font-size:10px; padding:3px 8px">Copy</button>
                                 </div>
-                                <div style="display:flex; align-items:center; gap:6px; background:#0b0912; padding:5px 8px; border-radius:4px">
-                                    <code id="yt-uri-2" style="color:#58e8f7; font-size:11px; flex:1">http://localhost:8770/social/youtube/oauth2callback</code>
-                                    <button type="button" id="copy-uri-2" class="secondary" style="font-size:10px; padding:2px 8px">Copy</button>
+                                <div style="display:flex; align-items:center; gap:6px; background:var(--muted); padding:6px 10px; border-radius:6px; border:1px solid var(--line)">
+                                    <code id="yt-uri-2" style="color:var(--brand-ink); font-weight:600; font-size:11px; flex:1">http://localhost:8770/social/youtube/oauth2callback</code>
+                                    <button type="button" id="copy-uri-2" class="secondary" style="font-size:10px; padding:3px 8px">Copy</button>
                                 </div>
                             </div>
                             <div style="display:flex; gap:8px; margin-top:4px">
-                                <button type="button" id="yt-save-secret-btn" class="secondary" style="font-size:11px; padding:8px 12px; flex:1">💾 Save Credentials</button>
-                                <button type="button" id="yt-auth-btn" class="primary" style="font-size:11px; padding:8px 12px; flex:1">🔗 Connect Google Account</button>
+                                <button type="button" id="yt-save-secret-btn" class="secondary" style="font-size:12px; padding:8px 12px; flex:1">💾 Save Credentials</button>
+                                <button type="button" id="yt-auth-btn" class="primary" style="font-size:12px; padding:8px 12px; flex:1">🔗 Connect Google Account</button>
                             </div>
                         </div>
                     </details>
@@ -519,9 +532,9 @@
                     <button id="share-native-btn" class="primary">📲 Share to Device Apps (Share Sheet)</button>
                     <button id="share-download-btn" class="secondary">↓ Download Video MP4</button>
                 </div>
-                <div style="margin-top:12px; padding:12px; background:#100c17; border-radius:10px; font-size:12px">
-                    <b>📱 Want to upload from your phone?</b>
-                    <p class="muted" style="margin-top:4px">Open NeonClipping on your phone browser using your local Wi-Fi IP to directly save &amp; share to Instagram/YouTube mobile apps!</p>
+                <div style="margin-top:12px; padding:14px; background:var(--muted); border:1px solid var(--line); border-radius:10px; font-size:12px; color:var(--text)">
+                    <b style="color:var(--brand-ink)">📱 Want to upload from your phone?</b>
+                    <p class="muted" style="margin-top:4px; color:var(--dim)">Open RealCut Studio on your phone browser using your local Wi-Fi IP to directly save &amp; share to Instagram/YouTube mobile apps!</p>
                 </div>
             </div>
 
@@ -534,13 +547,13 @@
             </div>
         </dialog>
 
-        <footer>NEONCLIPPING STUDIO <span>Review your moment. Keep the creator's campaign brief in view.</span></footer>
+        <footer>REALCUT STUDIO <span>Review your moment. Free, local, open-source.</span></footer>
     </main>
-    <script src="/assets/app.js?v=20261124-editbtn"></script>
+    <script src="/assets/app.js?v=20261124-realcut"></script>
     <script src="/assets/extras.js?v=20261123-del"></script>
     <script src="/assets/transcripts.js?v=20261123-del"></script>
     <script src="/assets/vision.js?v=20261123-del"></script>
-    <script src="/assets/social.js?v=20261124-editbtn"></script>
+    <script src="/assets/social.js?v=20261124-realcut"></script>
 </body>
 
 </html>

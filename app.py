@@ -49,6 +49,11 @@ def media(id:str):
  p=DATA/(id+'.mp4')
  if not p.exists():raise HTTPException(404)
  return FileResponse(p,media_type='video/mp4')
+@app.get('/brand/{name}')
+def brand_assets(name:str):
+ p=ROOT/'brand'/name
+ if not p.exists() or '..' in name:raise HTTPException(404)
+ return FileResponse(p)
 @app.get('/assets/{name}')
 def assets(name:str):
  if name not in ('app.js','style.css','extras.js','transcripts.js','vision.js','social.js'):raise HTTPException(404)
