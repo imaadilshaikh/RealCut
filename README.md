@@ -1,3 +1,12 @@
+---
+title: RealCut Studio
+emoji: 🎬
+colorFrom: pink
+colorTo: purple
+sdk: docker
+app_port: 7860
+---
+
 # RealCut
 
 **Paste a link. Get captioned 9:16 clips in about two minutes. Free, local, open-source.**

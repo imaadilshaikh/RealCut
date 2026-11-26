@@ -575,7 +575,7 @@ import social_upload
 social_upload.attach(app,DATA)
 
 if __name__=='__main__':
- cloud_port=os.environ.get('PORT')
+ cloud_port=os.environ.get('PORT') or ('7860' if os.environ.get('SPACE_ID') else None)
  lan=(os.environ.get('REALCUT_LAN')=='1' or os.environ.get('NEONCLIPPING_LAN')=='1')      # phone remote: listen on the home network (PIN required, see phone.py); default is this PC only
  port=int(cloud_port or os.environ.get('REALCUT_PORT') or os.environ.get('NEONCLIPPING_PORT') or '8770')
  host='0.0.0.0' if (cloud_port or lan) else '127.0.0.1'

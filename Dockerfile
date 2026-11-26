@@ -21,8 +21,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p /app/data
+RUN mkdir -p /app/data && chmod -R 777 /app/data
 
-EXPOSE 10000
+EXPOSE 7860 10000
 
 CMD ["python", "app.py"]
