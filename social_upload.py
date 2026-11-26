@@ -1,4 +1,4 @@
-"""Direct YouTube Shorts and Instagram Reels upload & share integration for NeonClipping."""
+"""Direct YouTube Shorts and Instagram Reels upload & share integration for RealCut."""
 import json
 import os
 import threading
@@ -26,7 +26,7 @@ def save_social_config(data_dir: Path, cfg: dict):
 
 def build_social_metadata(record: dict, file_id: str):
     settings = record.get('settings', {})
-    title = str(settings.get('title') or 'NeonClipping Highlight').strip()
+    title = str(settings.get('title') or 'RealCut Highlight').strip()
     hook = str(settings.get('hook') or '').strip()
     caption = str(settings.get('post_caption') or '').strip()
 
@@ -41,10 +41,10 @@ def build_social_metadata(record: dict, file_id: str):
         yt_desc_parts.append(caption)
     elif title and title != hook:
         yt_desc_parts.append(title)
-    yt_desc_parts.append("\n#Shorts #ShortsFeed #Viral #Trending #NeonClipping")
+    yt_desc_parts.append("\n#Shorts #ShortsFeed #Viral #Trending #RealCut")
     yt_desc = "\n\n".join(yt_desc_parts)
 
-    yt_tags = ["Shorts", "ShortsFeed", "Viral", "Trending", "NeonClipping", "Clip", "Highlights"]
+    yt_tags = ["Shorts", "ShortsFeed", "Viral", "Trending", "RealCut", "Clip", "Highlights"]
 
     ig_caption_parts = []
     if hook:
@@ -53,7 +53,7 @@ def build_social_metadata(record: dict, file_id: str):
         ig_caption_parts.append(caption)
     elif title and title != hook:
         ig_caption_parts.append(title)
-    ig_caption_parts.append(".\n.\n#reels #reelsinstagram #viral #trending #explorepage #fyp #reelsvideo #viralvideos #shorts #neonclipping")
+    ig_caption_parts.append(".\n.\n#reels #reelsinstagram #viral #trending #explorepage #fyp #reelsvideo #viralvideos #shorts #realcut")
     ig_caption = "\n\n".join(ig_caption_parts)
 
     return {
@@ -302,8 +302,8 @@ def attach(app, data_dir: Path):
                     <div style='font-size:40px;margin-bottom:10px'>🎉</div>
                     <h2 style='color:#58e8f7;margin:0 0 10px'>Connected to YouTube!</h2>
                     <p style='color:#d4fb58;font-weight:bold;font-size:16px;margin:0 0 16px'>Channel: {ch_title or 'YouTube Channel'}</p>
-                    <p style='color:#a99db7;font-size:13px;margin:0 0 24px'>Your YouTube account is now connected to NeonClipping. You can close this tab and start uploading clips directly.</p>
-                    <button onclick='if(window.opener){{window.opener.postMessage("yt_connected","*");}}window.close();' style='background:#ff4ba5;color:#1c0714;border:0;border-radius:8px;padding:12px 24px;font-weight:bold;cursor:pointer;font-size:14px'>Return to NeonClipping</button>
+                    <p style='color:#a99db7;font-size:13px;margin:0 0 24px'>Your YouTube account is now connected to RealCut. You can close this tab and start uploading clips directly.</p>
+                    <button onclick='if(window.opener){{window.opener.postMessage("yt_connected","*");}}window.close();' style='background:#ff4ba5;color:#1c0714;border:0;border-radius:8px;padding:12px 24px;font-weight:bold;cursor:pointer;font-size:14px'>Return to RealCut</button>
                 </div>
                 <script>
                     if(window.opener){{
@@ -361,7 +361,7 @@ def attach(app, data_dir: Path):
 
         title = (body.get('title') or 'Highlight #Shorts')[:100]
         description = body.get('description') or ''
-        tags = body.get('tags') or ["Shorts", "Viral", "NeonClipping"]
+        tags = body.get('tags') or ["Shorts", "Viral", "RealCut"]
         if isinstance(tags, str):
             tags = [t.strip() for t in tags.split(',') if t.strip()]
         privacy = body.get('privacy') or 'public'

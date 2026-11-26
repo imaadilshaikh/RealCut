@@ -1,4 +1,4 @@
-// NeonClipping Social Share & Upload (YouTube Shorts, Instagram Reels, System Share)
+// RealCut Social Share & Upload (YouTube Shorts, Instagram Reels, System Share)
 (function () {
   let currentFile = null;
   let clipData = null;
@@ -203,7 +203,7 @@
         dl.style.flex = '1';
         dl.style.textAlign = 'center';
         dl.href = '/media/' + clip.id;
-        dl.download = 'neonclipping-' + clip.id + '.mp4';
+        dl.download = 'realcut-' + clip.id + '.mp4';
         dl.textContent = '↓ Download MP4';
         toolsRow.append(dl);
 
@@ -395,9 +395,9 @@
         setStatus('Fetching video file for native sharing…');
         const response = await fetch('/media/' + currentFile);
         const blob = await response.blob();
-        const file = new File([blob], `neonclipping-${currentFile}.mp4`, { type: 'video/mp4' });
+        const file = new File([blob], `realcut-${currentFile}.mp4`, { type: 'video/mp4' });
         const shareData = {
-          title: clipData?.title || 'NeonClipping Highlight',
+          title: clipData?.title || 'RealCut Highlight',
           text: clipData?.hook || 'Check out this clip!',
           files: [file]
         };
@@ -418,7 +418,7 @@
       if (!currentFile) return;
       const a = document.createElement('a');
       a.href = '/media/' + currentFile;
-      a.download = 'neonclipping-' + currentFile + '.mp4';
+      a.download = 'realcut-' + currentFile + '.mp4';
       a.click();
     };
 

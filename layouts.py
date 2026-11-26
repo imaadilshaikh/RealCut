@@ -1,4 +1,4 @@
-"""NeonClipping's native layout geometry, shared by browser preview and FFmpeg."""
+"""RealCut's native layout geometry, shared by browser preview and FFmpeg."""
 import math
 
 CATALOG = [

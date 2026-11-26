@@ -151,7 +151,7 @@ def attach(app, data, root):
 
     @app.get('/manifest.webmanifest')
     def manifest():
-        return JSONResponse({'name': 'NeonClipping', 'short_name': 'NeonClip', 'start_url': '/m', 'scope': '/', 'display': 'standalone',
+        return JSONResponse({'name': 'RealCut', 'short_name': 'RealCut', 'start_url': '/m', 'scope': '/', 'display': 'standalone',
                              'background_color': '#0b0912', 'theme_color': '#0b0912',
                              'icons': [{'src': '/phone-icon.svg', 'sizes': 'any', 'type': 'image/svg+xml', 'purpose': 'any'}]},
                             media_type='application/manifest+json')

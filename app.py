@@ -49,11 +49,6 @@ def media(id:str):
  p=DATA/(id+'.mp4')
  if not p.exists():raise HTTPException(404)
  return FileResponse(p,media_type='video/mp4')
-@app.get('/brand/{name}')
-def brand_assets(name:str):
- p=ROOT/'brand'/name
- if not p.exists() or '..' in name:raise HTTPException(404)
- return FileResponse(p)
 @app.get('/assets/{name}')
 def assets(name:str):
  if name not in ('app.js','style.css','extras.js','transcripts.js','vision.js','social.js'):raise HTTPException(404)
@@ -63,7 +58,7 @@ def text_file(id:str,kind:str):
  if not id.isalnum() or kind not in ('srt','ass','vtt'):raise HTTPException(404)
  p=DATA/(id+'.'+kind)
  if not p.exists():raise HTTPException(404)
- return FileResponse(p,filename='neonclipping-'+id+'.'+kind)
+ return FileResponse(p,filename='realcut-'+id+'.'+kind)
 @app.get('/library')
 def library():
  records=[]
@@ -73,7 +68,7 @@ def library():
   try:
    j=json.loads(f.read_text());result=j.get('result',{})
    if result.get('status')=='done' and not j.get('superseded_by') and (DATA/(f.stem+'.mp4')).exists():
-    records.append({'id':f.stem,'title':j.get('settings',{}).get('title') or 'NeonClipping clip','created':f.stat().st_mtime,'meta':result.get('meta',{}),'settings':j.get('settings',{}),'srt':bool(result.get('srt')) and (DATA/(f.stem+'.srt')).exists(),**app.reedit_metadata(f.stem,j,groups)})
+    records.append({'id':f.stem,'title':j.get('settings',{}).get('title') or 'RealCut clip','created':f.stat().st_mtime,'meta':result.get('meta',{}),'settings':j.get('settings',{}),'srt':bool(result.get('srt')) and (DATA/(f.stem+'.srt')).exists(),**app.reedit_metadata(f.stem,j,groups)})
   except (ValueError,OSError):pass
  return sorted(records,key=lambda j:j['created'],reverse=True)
 
