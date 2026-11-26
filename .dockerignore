@@ -1,0 +1,7 @@
+.git
+.venv
+__pycache__
+data
+_backup_neonclipping_ui
+*.pyc
+*.log

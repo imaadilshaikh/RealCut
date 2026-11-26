@@ -575,7 +575,10 @@ import social_upload
 social_upload.attach(app,DATA)
 
 if __name__=='__main__':
- lan=os.environ.get('NEONCLIPPING_LAN')=='1'      # phone remote: listen on the home network (PIN required, see phone.py); default is this PC only
+ cloud_port=os.environ.get('PORT')
+ lan=(os.environ.get('REALCUT_LAN')=='1' or os.environ.get('NEONCLIPPING_LAN')=='1')      # phone remote: listen on the home network (PIN required, see phone.py); default is this PC only
+ port=int(cloud_port or os.environ.get('REALCUT_PORT') or os.environ.get('NEONCLIPPING_PORT') or '8770')
+ host='0.0.0.0' if (cloud_port or lan) else '127.0.0.1'
  if lan:
-  import phone as _ph;print('Phone access ON. Open one of these on your phone (same Wi-Fi):',', '.join(f"http://{ip}:{os.environ.get('NEONCLIPPING_PORT','8770')}/m" for ip in _ph.lan_ips()) or '(no Wi-Fi address found)')
- uvicorn.run(app,host='0.0.0.0' if lan else '127.0.0.1',port=int(os.environ.get('NEONCLIPPING_PORT','8770')))
+  import phone as _ph;print('Phone access ON. Open one of these on your phone (same Wi-Fi):',', '.join(f"http://{ip}:{port}/m" for ip in _ph.lan_ips()) or '(no Wi-Fi address found)')
+ uvicorn.run(app,host=host,port=port)

@@ -47,4 +47,7 @@ __pycache__/
 
 !mobile.html
 !netlify.toml
+!Dockerfile
+!render.yaml
+!.dockerignore
 .netlify/

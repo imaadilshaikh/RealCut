@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: realcut-studio
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: REALCUT_CPU
+        value: "1"
+      - key: NEONCLIPPING_CPU
+        value: "1"
