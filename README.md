@@ -1,12 +1,12 @@
-# NeonClipping
+# RealCut
 
 **Paste a link. Get captioned 9:16 clips in about two minutes. Free, local, open-source.**
 
-NeonClipping turns long YouTube / Twitch / Kick videos (or your own MP4) into vertical, captioned clips with a title and hook for each. Everything runs on your machine: no account, no subscription, no upload.
+RealCut turns long YouTube / Twitch / Kick videos (or your own MP4) into vertical, captioned clips with a title and hook for each. Everything runs on your machine: no account, no subscription, no upload.
 
-[![Star on GitHub](https://img.shields.io/badge/GitHub-imaadilshaikh-181717?style=for-the-badge&logo=github)](https://github.com/imaadilshaikh) [![Instagram](https://img.shields.io/badge/Follow-%40imaadilshaikh__-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/imaadilshaikh_/)
+[![Star on GitHub](https://img.shields.io/badge/GitHub-imaadilshaikh-181717?style=for-the-badge&logo=github)](https://github.com/imaadilshaikh/RealCut) [![Instagram](https://img.shields.io/badge/Follow-%40imaadilshaikh__-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/imaadilshaikh_/)
 
-**Made by [Aadil Shaikh](https://www.instagram.com/imaadilshaikh_/)**. If NeonClipping saves you time, please ⭐ star on [GitHub](https://github.com/imaadilshaikh) and follow [@imaadilshaikh_](https://www.instagram.com/imaadilshaikh_/) on Instagram.
+**Made by [Aadil Shaikh](https://www.instagram.com/imaadilshaikh_/)**. If RealCut saves you time, please ⭐ star on [GitHub](https://github.com/imaadilshaikh/RealCut) and follow [@imaadilshaikh_](https://www.instagram.com/imaadilshaikh_/) on Instagram.
 
 ![demo](docs/demo.gif)
 
@@ -93,8 +93,8 @@ Run the portable regression tests with `python -m unittest discover -s tests -v`
 Requirements: Python 3.10+, FFmpeg on PATH. Optional but recommended: [Ollama](https://ollama.com) with `ollama pull llama3.2:3b` for AI titles, hooks and scores (without it clips are picked by the audio/motion score), and an NVIDIA GPU for NVENC and faster-whisper.
 
 ```bash
-git clone https://github.com/iamajmeena/neonclipping
-cd neonclipping
+git clone https://github.com/imaadilshaikh/RealCut
+cd RealCut
 # Windows
 ./run.ps1
 # Linux / macOS
@@ -197,7 +197,7 @@ The **Find my facecam** chip (or "find it automatically when I press Make clips"
 
 ## Support
 
-NeonClipping is free. If it saves you time you can ⭐ star the repo, follow [@iamajmeena](https://www.instagram.com/iamajmeena/), or optionally donate via Razorpay (UPI / cards): <https://rzp.io/rzp/JN41CpW>. The app also has a ♥ Donate button. Nothing is ever locked behind a donation.
+RealCut is free. If it saves you time you can ⭐ star the repo ([github.com/imaadilshaikh/RealCut](https://github.com/imaadilshaikh/RealCut)), follow [@imaadilshaikh_](https://www.instagram.com/imaadilshaikh_/), or optionally donate via UPI (`9205177294@fam`). The app also has a ♥ Donate button. Nothing is ever locked behind a donation.
 
 ## Credits and inspiration
 
